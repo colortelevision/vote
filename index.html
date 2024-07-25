@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Image Selection App</title>
+        <title>Image Voting App</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -19,6 +19,7 @@
             }
             .image-item {
                 text-align: center;
+                width: 220px;
             }
             img {
                 max-width: 200px;
@@ -30,27 +31,74 @@
                 padding: 5px;
                 width: 100px;
             }
+            button {
+                margin-top: 5px;
+                padding: 5px 10px;
+            }
+            .votes {
+                margin-top: 10px;
+                font-size: 14px;
+            }
         </style>
     </head>
     <body>
-        <h1>Image Selection App</h1>
+        <h1>Image Voting App</h1>
         <div id="imageContainer" class="image-container">
             <!-- Images will be dynamically added here -->
         </div>
 
         <script>
-            // Sample image URLs (replace with your actual image URLs)
+            const JSONBIN_API_KEY =
+                "$2a$10$tJauVcktjjo1lsYG4drgSueXU2HU9X6dyF/OSjhV91cpxdGr4RokW"; // Replace with your actual API key
+            const JSONBIN_BIN_ID = "66a2b358acd3cb34a86b4987"; // Replace with your actual bin ID
+
             const imageUrls = [
-                "/api/placeholder/200/200",
-                "/api/placeholder/200/200",
-                "/api/placeholder/200/200",
-                "/api/placeholder/200/200",
+                "images/1.png",
+                "images/2.png",
+                "images/3.png",
+                "images/4.png",
             ];
 
             const imageContainer = document.getElementById("imageContainer");
 
-            // Function to create image elements with input boxes
-            function createImageElements() {
+            async function loadVotes() {
+                const response = await fetch(
+                    `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`,
+                    {
+                        headers: {
+                            "X-Master-Key": JSONBIN_API_KEY,
+                        },
+                    },
+                );
+                const data = await response.json();
+                return data.record || {};
+            }
+
+            async function saveVote(imageIndex, initials) {
+                const votes = await loadVotes();
+                if (!votes[imageIndex]) {
+                    votes[imageIndex] = [];
+                }
+                votes[imageIndex].push(initials);
+
+                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": JSONBIN_API_KEY,
+                    },
+                    body: JSON.stringify(votes),
+                });
+            }
+
+            function displayVotes(votesElement, votes) {
+                votesElement.innerHTML = votes
+                    .map((initials) => `<span>${initials}</span>`)
+                    .join(", ");
+            }
+
+            async function createImageElements() {
+                const votes = await loadVotes();
                 imageUrls.forEach((url, index) => {
                     const imageItem = document.createElement("div");
                     imageItem.className = "image-item";
@@ -65,26 +113,33 @@
                     input.maxLength = 3;
                     input.id = `input-${index}`;
 
-                    // Load saved initials from localStorage
-                    const savedInitials = localStorage.getItem(
-                        `image-${index}`,
-                    );
-                    if (savedInitials) {
-                        input.value = savedInitials;
-                    }
-
-                    // Save initials to localStorage on input change
-                    input.addEventListener("input", (e) => {
-                        localStorage.setItem(`image-${index}`, e.target.value);
+                    const publishButton = document.createElement("button");
+                    publishButton.textContent = "Publish";
+                    publishButton.addEventListener("click", async () => {
+                        const initials = input.value.trim();
+                        if (initials) {
+                            await saveVote(index, initials);
+                            input.value = "";
+                            const updatedVotes = await loadVotes();
+                            displayVotes(
+                                votesElement,
+                                updatedVotes[index] || [],
+                            );
+                        }
                     });
+
+                    const votesElement = document.createElement("div");
+                    votesElement.className = "votes";
+                    displayVotes(votesElement, votes[index] || []);
 
                     imageItem.appendChild(img);
                     imageItem.appendChild(input);
+                    imageItem.appendChild(publishButton);
+                    imageItem.appendChild(votesElement);
                     imageContainer.appendChild(imageItem);
                 });
             }
 
-            // Call the function to create image elements
             createImageElements();
         </script>
     </body>
