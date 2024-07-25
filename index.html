@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Image Selection App</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .image-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+            .image-item {
+                text-align: center;
+            }
+            img {
+                max-width: 200px;
+                max-height: 200px;
+                object-fit: cover;
+            }
+            input {
+                margin-top: 10px;
+                padding: 5px;
+                width: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Image Selection App</h1>
+        <div id="imageContainer" class="image-container">
+            <!-- Images will be dynamically added here -->
+        </div>
+
+        <script>
+            // Sample image URLs (replace with your actual image URLs)
+            const imageUrls = [
+                "/api/placeholder/200/200",
+                "/api/placeholder/200/200",
+                "/api/placeholder/200/200",
+                "/api/placeholder/200/200",
+            ];
+
+            const imageContainer = document.getElementById("imageContainer");
+
+            // Function to create image elements with input boxes
+            function createImageElements() {
+                imageUrls.forEach((url, index) => {
+                    const imageItem = document.createElement("div");
+                    imageItem.className = "image-item";
+
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = `Image ${index + 1}`;
+
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.placeholder = "Your initials";
+                    input.maxLength = 3;
+                    input.id = `input-${index}`;
+
+                    // Load saved initials from localStorage
+                    const savedInitials = localStorage.getItem(
+                        `image-${index}`,
+                    );
+                    if (savedInitials) {
+                        input.value = savedInitials;
+                    }
+
+                    // Save initials to localStorage on input change
+                    input.addEventListener("input", (e) => {
+                        localStorage.setItem(`image-${index}`, e.target.value);
+                    });
+
+                    imageItem.appendChild(img);
+                    imageItem.appendChild(input);
+                    imageContainer.appendChild(imageItem);
+                });
+            }
+
+            // Call the function to create image elements
+            createImageElements();
+        </script>
+    </body>
+</html>
