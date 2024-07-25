@@ -2,27 +2,30 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="https://unpkg.com/98.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Image Voting App</title>
+        <title>Votes That Matter</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: "Pixelated MS Sans Serif";
+                src: url("fonts/converted/ms_sans_serif.woff") format("woff");
+                src: url("fonts/converted/ms_sans_serif.woff2") format("woff2");
                 max-width: 800px;
                 margin: 0 auto;
-                padding: 20px;
+                padding: 10px;
             }
             .image-container {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
+                display: grid;
+                grid-template-colums: repeat(2, 1fr);
+                gap: 4px;
                 justify-content: center;
             }
             .image-item {
                 text-align: center;
-                width: 220px;
+                width: 10px;
             }
             img {
-                max-width: 200px;
+                max-width: 100%;
                 max-height: 200px;
                 object-fit: cover;
             }
@@ -42,7 +45,14 @@
         </style>
     </head>
     <body>
-        <h1>Image Voting App</h1>
+        <div class="title-bar">
+            <div class="title-bar-text">Imagine Not Voting lol</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
+            </div>
+        </div>
         <div id="imageContainer" class="image-container">
             <!-- Images will be dynamically added here -->
         </div>
@@ -114,7 +124,7 @@
                     input.id = `input-${index}`;
 
                     const publishButton = document.createElement("button");
-                    publishButton.textContent = "Publish";
+                    publishButton.textContent = "VOTE";
                     publishButton.addEventListener("click", async () => {
                         const initials = input.value.trim();
                         if (initials) {
