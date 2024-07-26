@@ -16,11 +16,12 @@
             }
             .image-container {
                 display: grid;
-                grid-template-colums: 50% 1fr;
+                grid-template-colums: repeat(2, 1fr);
+                grid-template-rows: repeat(2, 100px);
                 gap: 8px;
             }
             .image-item {
-                text-align: center;
+                text-align: start;
             }
             img {
                 max-width: 200px;
@@ -33,7 +34,7 @@
                 width: 100px;
             }
             button {
-                margin-top: 2pc;
+                margin-top: 2px;
                 padding: 5px 10px;
                 width: 100px;
             }
