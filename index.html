@@ -14,10 +14,9 @@
                 margin: 0 auto;
                 padding: 10px;
             }
-            .image-container {
-                display: flex;
-                grid-template-columns: repeat(2, 2fr);
-                grid-template-rows: repeat(2, 2fr);
+            .image-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
             .image-item {
@@ -31,7 +30,7 @@
                 object-fit: scale-down;
             }
             .vote-container {
-                display: grid;
+                display: flex;
                 flex-direction: column;
                 align-items: center;
                 margin-top: 4px;
@@ -63,7 +62,7 @@
                 <button aria-label="Close"></button>
             </div>
         </div>
-        <div id="imageContainer" class="image-container">
+        <div id="imageContainer" class="image-grid">
             <!-- Images will be dynamically added here -->
         </div>
 
@@ -128,7 +127,7 @@
                     img.alt = `Image ${index + 1}`;
 
                     const voteContainer = document.createElement("div");
-                    voteCointainer.className = "vote-container";
+                    voteContainer.className = "vote-container";
 
                     const input = document.createElement("input");
                     input.type = "text";
@@ -155,10 +154,12 @@
                     votesElement.className = "votes";
                     displayVotes(votesElement, votes[index] || []);
 
+                    voteContainer.appendChild(input);
+                    voteContainer.appendChild(publishButton);
+                    voteContainer.appendChild(votesElement);
+
                     imageItem.appendChild(img);
-                    imageItem.appendChild(input);
-                    imageItem.appendChild(publishButton);
-                    imageItem.appendChild(votesElement);
+                    imageItem.appendChild(voteContainer);
                     imageContainer.appendChild(imageItem);
                 });
             }
