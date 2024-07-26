@@ -16,7 +16,7 @@
             }
             .image-container {
                 display: grid;
-                grid-template-colums: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(2, 100px);
                 gap: 8px;
             }
@@ -26,17 +26,16 @@
             img {
                 max-width: 200px;
                 max-height: 200px;
-                cover-fit: cover;
+                object-fit: scale-down;
             }
             input {
                 margin-top: 4px;
                 padding: 4px;
-                width: 100px;
+                width: 10px;
             }
             button {
-                margin-top: 2px;
+                margin-top: 5px;
                 padding: 5px 10px;
-                width: 100px;
             }
             .votes {
                 margin-top: 4px;
